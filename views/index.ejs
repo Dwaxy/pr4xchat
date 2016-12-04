@@ -1,0 +1,26 @@
+<%- include('header') -%>
+
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+
+<h1>Users</h1>
+<ul id="users"></ul>
+
+<h1>Messages</h1>
+<ul id="messages"></ul>
+
+<form id="submit-message">
+  <input type="text" id="m" />
+  <button>Send</button>
+</form>
+
+<form id="submit-nickname">
+  <p>Nickname</p>
+  <input type="text" id="nickname" />
+  <button>Save</button>
+  <span class="saved" style="display: none">
+    Saved
+  </span>
+</form>
+
+<%- include('footer') -%>
