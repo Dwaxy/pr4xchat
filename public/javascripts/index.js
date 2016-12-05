@@ -1,5 +1,5 @@
+var nickname // = "Anonymous" + Math.floor((Math.random() * 999) + 1);
 var socket = io();
-var nickname = "Anonymous" + Math.floor((Math.random() * 999) + 1);
 // Called when the user submit a new nickname
 function submit_new_nickname(event) {
     var newNickname = $('#nickname').val();
@@ -51,10 +51,12 @@ function on_users_list(userslist) {
     }).addClass("me");
 }
 function on_whoareyou() {
-    socket.emit('new nickname', nickname);
+    if (nickname) {
+        socket.emit('iam', nickname);
+    }
 }
 $(document).ready(function() {
-    socket.emit('new user', nickname);
+    //socket.emit('new user', nickname);
     //socket.emit('chat message', {message: "Connected", nickname: nickname});
     $('form#submit-message').submit(submit_message);
     $('form#submit-nickname').submit(submit_new_nickname);
@@ -62,4 +64,8 @@ $(document).ready(function() {
     socket.on('chat message', on_chat_message);
     socket.on('users list', on_users_list);
     socket.on('whoareyou', on_whoareyou);
+    socket.emit("whoami")
+    socket.on("youare", function(mynickname) {
+        nickname = mynickname;
+    })
 }) 
