@@ -19,7 +19,6 @@ function submit_message(event) {
     var m = $('#m').val();
     if (m != "" && m != undefined) {
       socket.emit('chat message', {message: m, nickname: nickname});
-      $('#messages').append($('<li>').text(nickname+": "+m));
       $('#m').val('');
     }
     event.preventDefault();
@@ -35,7 +34,12 @@ function on_chat_message(msg) {
     if (msg.message && msg.nickname) {
         console.log("Chat Message!");
         console.log(msg.nickname);
-      $('#messages').append($('<li>').text(msg.nickname+": "+msg.message));
+        var dateElement = $('<div>').text(new Date(msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})).addClass('time');
+        var nicknameElement = $('<div>').text(msg.nickname).addClass('nickname');
+        var messageElement = $('<div>').text(msg.message).addClass('message');
+        var chatElement = $('<li>').append(dateElement).append(nicknameElement).append(messageElement);
+        chatElement.addClass("chat-item");
+        $('#messages').append(chatElement);//+" " + msg.nickname+": "+msg.message));
     } else if(msg) {
       $('#messages').append($('<li>').text(msg));
     }
