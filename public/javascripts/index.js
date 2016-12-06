@@ -68,5 +68,6 @@ $(document).ready(function() {
     socket.emit("login");
     socket.on("youare", function(mynickname) {
         nickname = mynickname;
+         $('#nickname').val(mynickname);
     });
 }) ;
