@@ -71,4 +71,20 @@ $(document).ready(function() {
         nickname = mynickname;
          $('#nickname').val(mynickname);
     });
+    $('#m').keydown(function (e){
+        socket.emit("typing", nickname);
+    });
+    var typingTimeouts = {};
+    socket.on("typing", function(nickname) {
+        if (typingTimeouts[nickname]) {
+            clearTimeout(typingTimeouts[nickname]);
+            delete typingTimeouts[nickname];
+        } else {
+          $('#typing').append('<div id="typing-'+nickname+'">'+nickname+' is typing...</div>');
+        }
+        typingTimeouts[nickname] = setTimeout(function() {
+            $("#typing-"+nickname).remove();
+            delete typingTimeouts[nickname]
+        }, 2000);
+    });
 }) ;
