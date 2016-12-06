@@ -1,4 +1,5 @@
-var nickname // = "Anonymous" + Math.floor((Math.random() * 999) + 1);
+/* global $ io */
+var nickname; // = "Anonymous" + Math.floor((Math.random() * 999) + 1);
 var socket = io();
 // Called when the user submit a new nickname
 function submit_new_nickname(event) {
@@ -7,7 +8,7 @@ function submit_new_nickname(event) {
         nickname = newNickname;
         socket.emit('new nickname', nickname);
         $('.saved').fadeIn('slow', function() {
-            setTimeout(function() {$('.saved').fadeOut('slow')}, 2000)
+            setTimeout(function() {$('.saved').fadeOut('slow')}, 2000);
         });
     }
     event.preventDefault();
@@ -31,11 +32,11 @@ function on_chat_notice(notice) {
 // Called when a new message from another user comes in.
 function on_chat_message(msg) {
     if (msg.message && msg.nickname) {
-        console.log("Chat Message!")
+        console.log("Chat Message!");
         console.log(msg.nickname);
       $('#messages').append($('<li>').text(msg.nickname+": "+msg.message));
     } else if(msg) {
-      $('#messages').append($('<li>').text(msg))
+      $('#messages').append($('<li>').text(msg));
     }
 }
 // Called when there's a change in the list of users.
@@ -64,8 +65,8 @@ $(document).ready(function() {
     socket.on('chat message', on_chat_message);
     socket.on('users list', on_users_list);
     socket.on('whoareyou', on_whoareyou);
-    socket.emit("whoami")
+    socket.emit("login");
     socket.on("youare", function(mynickname) {
         nickname = mynickname;
-    })
-}) 
+    });
+}) ;
