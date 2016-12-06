@@ -19,6 +19,7 @@ function submit_message(event) {
     var m = $('#m').val();
     if (m != "" && m != undefined) {
       socket.emit('chat message', {message: m, nickname: nickname});
+      $('#messages').append($('<li>').text(nickname+": "+m));
       $('#m').val('');
     }
     event.preventDefault();
