@@ -87,4 +87,13 @@ $(document).ready(function() {
             delete typingTimeouts[nickname]
         }, 2000);
     });
+    $("#users").on('click', 'li', function(event) {
+        var existing = $("#m").val();
+        if (existing.length > 1 && existing[-1] != " ") {
+            existing += " "
+        }
+        $("#m").val(existing + "@" + $(event.target).text()+' ');
+        $("#m").focus();
+    });
+    $("#m").focus();
 }) ;
