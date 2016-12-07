@@ -19,7 +19,7 @@ function submit_new_nickname(event) {
 function submit_message(event) {
     var m = $('#m').val();
     if (m != "" && m != undefined) {
-        chat = {message: m, from: nickname, to: $('#to').val()}
+        var chat = {message: m, from: nickname, to: $('#to').val()};
         socket.emit('chat message', chat);
         $('#m').val('');
     }
@@ -59,7 +59,7 @@ function on_users_list(userslist) {
     //console.log(userslist);
     $('#users').empty();
     $('#to').empty();
-    $('#to').append($('<option />').text('All'))
+    $('#to').append($('<option />').text('All'));
    userslist.forEach(function(each_nickname) {
         $('#users').append($('<li>').text(each_nickname));
         if (each_nickname != nickname) {
@@ -90,7 +90,7 @@ $(document).ready(function() {
         status = "connected";
     });
     socket.on('disconnect', function(reason) {
-        status = "disconnected"
+        status = "disconnected";
         $('#status').text("Server is down... Please wait").fadeIn('slow');
     });
     socket.on('chat notice', on_chat_notice);
@@ -115,13 +115,13 @@ $(document).ready(function() {
         }
         typingTimeouts[nickname] = setTimeout(function() {
             $("#typing-"+nickname).remove();
-            delete typingTimeouts[nickname]
+            delete typingTimeouts[nickname];
         }, 2000);
     });
     $("#users").on('click', 'li', function(event) {
         var existing = $("#m").val();
         if (existing.length > 1 && existing[-1] != " ") {
-            existing += " "
+            existing += " ";
         }
         $("#m").val(existing + "@" + $(event.target).text()+' ');
         $("#m").focus();
