@@ -1,6 +1,7 @@
 /* global $ io */
 var nickname; // = "Anonymous" + Math.floor((Math.random() * 999) + 1);
 var socket = io();
+var status = "unknown";
 // Called when the user submit a new nickname
 function submit_new_nickname(event) {
     var newNickname = $('#nickname').val();
@@ -79,11 +80,24 @@ $(document).ready(function() {
     //socket.emit('chat message', {message: "Connected", nickname: nickname});
     $('form#submit-message').submit(submit_message);
     $('form#submit-nickname').submit(submit_new_nickname);
+    socket.on('connect', function() {
+        if (status == "disconnected") {
+            $('#status').text("Server back up! Enjoy").fadeOut('slow');
+            socket.emit("relogin", nickname);
+        } else {
+            socket.emit("login");
+        }
+        status = "connected";
+    });
+    socket.on('disconnect', function(reason) {
+        status = "disconnected"
+        $('#status').text("Server is down... Please wait").fadeIn('slow');
+    });
     socket.on('chat notice', on_chat_notice);
     socket.on('chat message', on_chat_message);
     socket.on('users list', on_users_list);
     socket.on('whoareyou', on_whoareyou);
-    socket.emit("login");
+    
     socket.on("youare", function(mynickname) {
         nickname = mynickname;
          $('#nickname').val(mynickname);
