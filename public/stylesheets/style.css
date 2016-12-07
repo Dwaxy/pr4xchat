@@ -6,7 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
-
+#messages .time {
+  float: right;
+}
 #users li .me {
   font-weight: bold;
   color: blue;

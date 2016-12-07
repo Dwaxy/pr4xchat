@@ -46,7 +46,7 @@ function on_chat_message(msg) {
             nicknameElement = $('<div>').text(msg.from).addClass('from');
         }
         var messageElement = $('<div>').text(msg.message).addClass('message');
-        var chatElement = $('<li>').append(dateElement).append(nicknameElement).append(messageElement);
+        var chatElement = $('<li>').append(nicknameElement).append(dateElement).append(messageElement);
         chatElement.addClass("chat-item");
         $('#messages').append(chatElement);//+" " + msg.from+": "+msg.message));
     } else if(msg) {
