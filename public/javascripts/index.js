@@ -18,8 +18,9 @@ function submit_new_nickname(event) {
 function submit_message(event) {
     var m = $('#m').val();
     if (m != "" && m != undefined) {
-      socket.emit('chat message', {message: m, nickname: nickname});
-      $('#m').val('');
+        chat = {message: m, from: nickname, to: $('#to').val()}
+        socket.emit('chat message', chat);
+        $('#m').val('');
     }
     event.preventDefault();
     return false;
@@ -27,19 +28,26 @@ function submit_message(event) {
 // Called when the server sends a notice
 // i.e.: User login, Disconnect, changes his name
 function on_chat_notice(notice) {
-    $('#messages').append($('<li>').text(notice));
+    $('#messages').append($('<li>').
+        append($('<div>').text(notice.text).addClass('notice')).
+        append($('<div>').text(new Date(notice.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})).addClass('time')));
 }
 // Called when a new message from another user comes in.
 function on_chat_message(msg) {
-    if (msg.message && msg.nickname) {
+    if (msg.message && msg.from) {
         console.log("Chat Message!");
-        console.log(msg.nickname);
+        console.log(msg.from);
         var dateElement = $('<div>').text(new Date(msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})).addClass('time');
-        var nicknameElement = $('<div>').text(msg.nickname).addClass('nickname');
+        var nicknameElement;
+        if (msg.to != "All") {
+            nicknameElement = $('<div>').text(msg.from+" -> "+msg.to).addClass('from');
+        } else {
+            nicknameElement = $('<div>').text(msg.from).addClass('from');
+        }
         var messageElement = $('<div>').text(msg.message).addClass('message');
         var chatElement = $('<li>').append(dateElement).append(nicknameElement).append(messageElement);
         chatElement.addClass("chat-item");
-        $('#messages').append(chatElement);//+" " + msg.nickname+": "+msg.message));
+        $('#messages').append(chatElement);//+" " + msg.from+": "+msg.message));
     } else if(msg) {
       $('#messages').append($('<li>').text(msg));
     }
@@ -49,8 +57,13 @@ function on_chat_message(msg) {
 function on_users_list(userslist) {
     //console.log(userslist);
     $('#users').empty();
-   userslist.forEach(function(nickname) {
-      $('#users').append($('<li>').text(nickname));
+    $('#to').empty();
+    $('#to').append($('<option />').text('All'))
+   userslist.forEach(function(each_nickname) {
+        $('#users').append($('<li>').text(each_nickname));
+        if (each_nickname != nickname) {
+            $('#to').append($('<option />').text(each_nickname));
+        }
     });
     $('#users').find("li:contains('"+nickname+"')").filter(function() {
         return $(this).text() === nickname;
