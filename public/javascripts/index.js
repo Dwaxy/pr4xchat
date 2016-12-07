@@ -82,7 +82,8 @@ $(document).ready(function() {
     $('form#submit-nickname').submit(submit_new_nickname);
     socket.on('connect', function() {
         if (status == "disconnected") {
-            $('#status').text("Server back up! Enjoy").fadeOut('slow');
+            $('#status').text("Server back up! Enjoy");
+            setTimeout(function() {$('#status').fadeOut('slow')}, 3000);
             socket.emit("relogin", nickname);
         } else {
             socket.emit("login");
